@@ -2,13 +2,12 @@ FROM n8nio/n8n:latest
 
 USER root
 
-# Instala Python, venv, pip e Tesseract (para OCR; remova tesseract-ocr se não quiser OCR)
-RUN apt-get update && apt-get install -y \
+# Instala Python, pip e Tesseract (para OCR; remova tesseract-ocr se não quiser OCR)
+RUN apk update && apk add --no-cache \
     python3 \
-    python3-venv \
-    python3-pip \
+    py3-pip \
     tesseract-ocr \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/cache/apk/*
 
 # Copia e instala dependências Python em um venv
 COPY requirements.txt /tmp/requirements.txt
