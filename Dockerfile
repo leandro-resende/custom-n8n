@@ -1,17 +1,21 @@
+# Use the official n8n image as the base
 FROM n8nio/n8n:latest
 
+# Switch to root to install dependencies
 USER root
 
-# Instala Python e pymupdf system-wide
-RUN apk update && apk add --no-cache \
-    python3 \
-    py3-pip \
-    && pip3 install --no-cache-dir pymupdf \
-    && rm -rf /var/cache/apk/*
+# Install Python and pip using Alpine's package manager
+RUN apk add --no-cache python3 py3-pip
 
-# Instala o node comunitário
+# Create a virtual environment
+RUN python3 -m venv /opt/venv
+
+# Activate the virtual environment and install dependencies
+COPY requirements.txt /tmp/requirements.txt
+RUN . /opt/venv/bin/activate && pip install --no-cache-dir -r /tmp/requirements.txt
+
+# Make the virtual environment the default for Python
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Switch back to the default non-root user
 USER node
-RUN mkdir -p /home/node/.n8n/custom && \
-    cd /home/node/.n8n/custom && \
-    npm init -y && \
-    npm install n8n-nodes-python-runtime
