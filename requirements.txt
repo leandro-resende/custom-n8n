@@ -1,0 +1,4 @@
+pymupdf
+numpy
+opencv-python-headless  # Versão sem GUI para Docker
+pytesseract
